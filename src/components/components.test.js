@@ -1,21 +1,17 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent  } from '@testing-library/react';
 import Read, { GET_USERS } from './read';
 import { MemoryRouter, BrowserRouter } from "react-router-dom";
 import '@testing-library/jest-dom';
 import { MockedProvider, MockedResponse } from "@apollo/client/testing";
+import { unmountComponentAtNode } from "react-dom";
+import { act } from 'react-dom/test-utils';
+import Create from './create';
+import App from './../App'
 
 
-// const GET_USERS = gql`
-//   query users {
-//     users {
-//       id
-//       name
-//       email
-//       password
-//     }
-//   }
-// `;
+
+//////////test1////////////
 
 test('renders component Read', () => {
   const sample_data = {id: 1, name: "shubham", email:"mahitkar" };
@@ -47,24 +43,47 @@ test('renders component Read', () => {
 
 
 
-// it("should render user table", async () => {
-//   const userMock = {
-//     request: {
-//       query: GET_USERS,
-//       variables: { name: "shubham" }
-//     },
-//     result: {
-//       data: { users: { id: 1, name: "shubham", email: "mahitkar" } }
-//     }
-//   };
-//   render(
-//     <MockedProvider mocks={[userMock]} addTypename={false}>
-//       <BrowserRouter>
-//          <Read /> 
-//       </BrowserRouter>
-//      </MockedProvider>
-//   );
-//   expect(await screen.findByText("shubham")).toBeInTheDocument();
-//   expect(await screen.findByText("Create User")).toBeInTheDocument();
-// });
 
+//////////test2////////////
+test('input changes value on typing', () => {
+  
+  render(
+  <MockedProvider mocks={[]} addTypename={false}>
+    <BrowserRouter>
+      <Create />
+    </BrowserRouter>
+  </MockedProvider>);
+  const inputElement = screen.getByPlaceholderText('Name');
+
+  fireEvent.change(inputElement, { target: { value: 'Name1' } });
+
+  expect(inputElement.value).toBe('Name1');
+});
+
+
+//////////test3////////////
+let container = null;
+beforeEach(() => {
+  // setup a DOM element as a render target
+  container = document.createElement("div");
+  document.body.appendChild(container);
+});
+
+afterEach(() => {
+  // cleanup on exiting
+  unmountComponentAtNode(container);
+  container.remove();
+  container = null;
+});
+
+it("renders with or without a name", () => {
+  act(() => {
+    render(
+      <MockedProvider mocks={[]} addTypename={false}>
+        <BrowserRouter>
+          <Create />
+        </BrowserRouter>
+      </MockedProvider>, container);
+  });
+  expect(container.textContent).toBe("Create");
+});
