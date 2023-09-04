@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import axios from "axios";
 import { useNavigate  } from 'react-router';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import Table from '@mui/material/Table';
@@ -12,6 +11,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import TablePagination from '@mui/material/TablePagination';
 
 
 
@@ -27,90 +27,37 @@ export const GET_USERS = gql`
 `;
 
 
-const DELETE_USER = gql`
+export const DELETE_USER = gql`
 mutation deleteUser($id: ID!) {
     deleteUser(id: $id)
   }
 `;
 
+const columns = [
+  { id: 'name', label: 'Name', minWidth: 170 },
+  { id: 'email', label: 'Email', minWidth: 170 },
+  // { id: 'password', label: 'Password', minWidth: 170 },
+]
 
 export default function Read() {
-    const [users, setUsers] = useState([])
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
     let history = useNavigate();
-    
-    const [deleteData, { loading1, error1, data1 }] = useMutation(DELETE_USER);
 
-    const { loading, error, data } = useQuery(GET_USERS);
+    const [deleteData] = useMutation(DELETE_USER);
+
+    const { loading, error, data, refetch } = useQuery(GET_USERS);
     if (loading) return 'Submitting...';
     if (error) return `Submission error! ${error.message}`;
-
-    
-
-    // useEffect(()=>{
-    //     // let data = '';
-    //     // let config = {
-    //     // method: 'get',
-    //     // maxBodyLength: Infinity,
-    //     // url: 'http://localhost:5000/users',
-    //     // headers: { },
-    //     // data : data
-    //     // };
-
-    //     // axios.request(config)
-    //     // .then((response) => {
-    //     //     setUsers(response.data)
-    //     //     console.log(response.data);
-    //     // })
-    //     // .catch((error) => {
-    //     //     console.log(error);
-    //     // });
-    // } , [data])
-
-
-    const setData = (data) => {
-        // let { id, name, email, password } = data;
-        localStorage.setItem('ID', data.id);
-        localStorage.setItem('Name', data.name);
-        localStorage.setItem('Email', data.email);
-        localStorage.setItem('Password', data.password);
-    }
-
-
-    const getData = () => {
-        axios.get(`http://localhost:5000/users`)
-            .then((getData) => {
-                 setUsers(getData.data);
-             })
-    }
 
     function Add() {
         history('/create');
     }
 
     const onDelete = (id) => {
-        deleteData({ variables: { id: id } });
-        history('/read');
-
-        // let data = '';
-
-        // let config = {
-        // method: 'delete',
-        // maxBodyLength: Infinity,
-        // url: 'http://localhost:5000/delete/'+ id,
-        // headers: { },
-        // data : data
-        // };
-
-        // axios.request(config)
-        // .then((response) => {
-        // console.log(JSON.stringify(response.data));
-        // })
-        // .then(() => {
-        //     getData();
-        // })
-        // .catch((error) => {
-        // console.log(error);
-        // });
+        deleteData({ variables: { id: id } }).then(()=>{
+          refetch();
+      } );
     }
 
 
@@ -134,42 +81,79 @@ export default function Read() {
         },
       }));
 
-    return (
-        <div className="main">
-            <div style={{padding: 50}}><Button onClick={() => Add()}>Create User</Button></div>
-            <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                <TableHead>
-                    <StyledTableRow>
-                        <StyledTableCell>Name</StyledTableCell>
-                        <StyledTableCell>Email</StyledTableCell>
-                        <StyledTableCell>Password</StyledTableCell>
-                        <StyledTableCell>Update</StyledTableCell>
-                        <StyledTableCell>Delete</StyledTableCell>
-                    </StyledTableRow>
-                </TableHead>
+      const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+      };
+    
+      const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+      };
 
+    return (
+      <div className="main">
+        <h1 title="user list">USER LIST</h1>
+        <div>
+          <Button type="button" role='button' onClick={() => Add()}>Create User</Button>
+        </div>
+          <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+            <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <StyledTableRow>
+                    {columns.map((column, index) => (
+                      <StyledTableCell
+                        key={index}
+                        align={column.align}
+                        style={{ minWidth: column.minWidth }}
+                      >
+                        {column.label}
+                      </StyledTableCell>
+                    ))}
+                    <StyledTableCell>Update</StyledTableCell>
+                    <StyledTableCell>DELETE_USER</StyledTableCell>
+                  </StyledTableRow>
+                </TableHead>
                 <TableBody>
-                    {data?.users.map((data) => {
-                        return (
-                            <StyledTableRow  key={data}>
-                                <StyledTableCell>{data.name}</StyledTableCell>
-                                <StyledTableCell>{data.email}</StyledTableCell>
-                                <StyledTableCell>{data.password}</StyledTableCell>
-                                <Link to='/update'>
-                                    <StyledTableCell> 
-                                        <Button onClick={() => setData(data)}>Update</Button>
-                                    </StyledTableCell>
-                                </Link>
-                                <StyledTableCell>
-                                    <Button onClick={() => onDelete(data.id)}>Delete</Button>
-                                </StyledTableCell>
-                            </StyledTableRow>
-                        )
+                  {data?.users
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => {
+                      return (
+                        <StyledTableRow hover tabIndex={-1} key={index}>
+                          {columns.map((column,index) => {
+                            const value = row[column.id];
+                            return (
+                              <StyledTableCell key={index} align={column.align}>
+                                { value }
+                              </StyledTableCell>
+                            );
+                          })}
+                          
+                          <StyledTableCell> 
+                            <Link to={`/update/${row.id}`}>
+                              <Button>Update</Button>
+                            </Link>
+                          </StyledTableCell>
+                          
+                          <StyledTableCell data-testid="tech-form">
+                              <Button key={row.id} onClick={() => onDelete(row.id)}>Delete</Button>
+                          </StyledTableCell>
+                        </StyledTableRow>
+                      );
                     })}
                 </TableBody>
-            </Table>
+              </Table>
             </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 100]}
+              component="div"
+              count={data.users.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
         </div>
     )
 }

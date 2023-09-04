@@ -10,7 +10,7 @@ function App() {
       <Routes>
           <Route exact path='/create' Component={Create} />
           <Route exact path='/read' Component={Read} />
-          <Route path='/update' Component={Update} />
+          <Route path='/update/:id' Component={Update} />
         </Routes>
     </Router>
   );
