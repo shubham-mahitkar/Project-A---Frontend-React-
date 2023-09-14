@@ -19,6 +19,7 @@ import { DELETE_USER } from '../data/mutation';
 const columns = [
   { id: 'name', label: 'Name', minWidth: 170 },
   { id: 'email', label: 'Email', minWidth: 170 },
+  { id: 'application', label: 'Applications', minWidth: 170 },
   // { id: 'password', label: 'Password', minWidth: 170 },
 ]
 
@@ -106,6 +107,7 @@ export default function Read() {
                         <StyledTableRow hover tabIndex={-1} key={index}>
                           {columns.map((column,index) => {
                             const value = row[column.id];
+                            console.log("data: ", data);
                             return (
                               <StyledTableCell key={index} align={column.align}>
                                 { value }

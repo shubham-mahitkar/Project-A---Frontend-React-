@@ -18,6 +18,7 @@ export default function Update() {
         variables: { id: id },
       });
 
+    const application = dataByID['user']['application'];
     useEffect(()=> {
         if(dataByID){
             setName(dataByID?.user.name);
@@ -52,6 +53,10 @@ export default function Update() {
                 <Form.Field>
                     <label>Email</label>
                     <input placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} required/>
+                </Form.Field>
+                <Form.Field>
+                    <label>Applications</label>
+                    <input placeholder='Applications' value={application} readOnly />
                 </Form.Field>
                 <Button type='submit'>UPDATE USER</Button>
             </Form>
