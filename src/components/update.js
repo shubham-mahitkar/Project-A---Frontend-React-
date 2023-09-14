@@ -1,31 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form } from 'semantic-ui-react'
 import { useNavigate  } from 'react-router';
-import { useQuery, useMutation, gql } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { useParams } from 'react-router-dom';
-
-
-// Define mutation
-export const UPDATE_USER = gql`
-mutation updateUser($id: ID!, $name: String!, $email: String!) {
-  updateUser(id: $id, name: $name, email: $email) {
-    id
-    name
-    email
-  }
-}
-`;
-
-export const GET_USER_BY_ID = gql`
-  query user($id: ID!) {
-    user(id: $id) {
-      id
-      name
-      email
-      password
-    }
-  }
-`;
+import ErrorBoundary from './errorboundary';
+import { UPDATE_USER } from '../data/mutation';
+import { GET_USER_BY_ID } from '../data/queries';
 
 
 export default function Update() {
@@ -53,7 +33,8 @@ export default function Update() {
       }
       }, [data]);
     if (loading) return 'Submitting...';
-    if (error) return `Submission error! ${error.message}`;
+    // if (error) return `Submission error! ${error.message}`;
+    if (error) return <ErrorBoundary />;
 
 
     return (

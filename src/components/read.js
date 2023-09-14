@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { useNavigate  } from 'react-router';
-import { useQuery, gql, useMutation } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import Table from '@mui/material/Table';
 import { styled } from '@mui/material/styles';
 import TableBody from '@mui/material/TableBody';
@@ -12,26 +12,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
-
-
-
-export const GET_USERS = gql`
-  query users {
-    users {
-      id
-      name
-      email
-      password
-    }
-  }
-`;
-
-
-export const DELETE_USER = gql`
-mutation deleteUser($id: ID!) {
-    deleteUser(id: $id)
-  }
-`;
+import ErrorBoundary from './errorboundary';
+import { GET_USERS } from '../data/queries';
+import { DELETE_USER } from '../data/mutation';
 
 const columns = [
   { id: 'name', label: 'Name', minWidth: 170 },
@@ -48,7 +31,8 @@ export default function Read() {
 
     const { loading, error, data, refetch } = useQuery(GET_USERS);
     if (loading) return 'Submitting...';
-    if (error) return `Submission error! ${error.message}`;
+    // if (error) return `Submission error! ${error.message}`;
+    if (error) return <ErrorBoundary />;
 
     function Add() {
         history('/create');

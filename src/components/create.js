@@ -3,18 +3,8 @@ import { Form } from 'semantic-ui-react'
 import { useNavigate  } from 'react-router';
 import { useMutation, gql } from '@apollo/client';
 import Button from '@mui/material/Button';
-
-
-// Define mutation
-export const CREATE_USER = gql`
-mutation createUser($name: String!, $email: String!, $password: String!) {
-    createUser(name: $name, email: $email, password:$password) {
-      name
-      email
-      password
-    }
-  }
-`;
+import ErrorBoundary from './errorboundary';
+import { CREATE_USER } from '../data/mutation';
 
 export default function Create() {
     const [name, setName] = useState('');
@@ -30,7 +20,8 @@ export default function Create() {
         }, [data]);
 
     if (loading) return 'Submitting...';
-    if (error) return `Submission error! ${error.message}`;
+    // if (error) return `Submission error! ${error.message}`;
+    if (error) return <ErrorBoundary />;
      
 
     return (

@@ -2,17 +2,22 @@
 import Create from './components/create';
 import Read from './components/read';
 import Update from './components/update';
+import PageNotFound from './components/pagenotfound';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ErrorBoundary from './components/errorboundary';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-          <Route exact path='/create' Component={Create} />
-          <Route exact path='/read' Component={Read} />
-          <Route path='/update/:id' Component={Update} />
-        </Routes>
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <Routes>
+            <Route exact path='/create' Component={Create} />
+            <Route exact path='/read' Component={Read} />
+            <Route path='/update/:id' Component={Update} />
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+      </Router>
+    </ErrorBoundary>
   );
 }
 

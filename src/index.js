@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
 import './App.css';
-import "./components/styles.scss";
+import "./components/style/styles.scss";
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000',

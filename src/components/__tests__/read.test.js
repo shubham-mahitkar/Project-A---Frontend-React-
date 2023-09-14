@@ -1,10 +1,11 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor  } from '@testing-library/react';
-import Read, { GET_USERS, DELETE_USER } from './read';
+import Read from '../read';
 import { BrowserRouter } from "react-router-dom";
 import '@testing-library/jest-dom';
 import { MockedProvider } from "@apollo/client/testing";
-import { act } from 'react-dom/test-utils';
+import { GET_USERS } from '../../data/queries';
+import { DELETE_USER } from '../../data/mutation';
 
 
 /////////test1 - Read Component////////////
@@ -41,7 +42,7 @@ test('check Read component', async () => {
 
 
 /////////test1 - Delete Component////////////
-test('test delete function', async () => {
+test('check Delete function', async () => {
     const id = 999;
     const mocks = [
       {
@@ -80,24 +81,23 @@ test('test delete function', async () => {
             }
           }},
     ];
-    act(() => {
+
       render(
           <MockedProvider mocks={mocks} addTypename={false}>
           <BrowserRouter>
               <Read />
           </BrowserRouter>
           </MockedProvider>
-      )});
+      )
   
       await waitFor(()=>{expect(screen.getByRole('button',{name:'Delete'})).toBeInTheDocument()});
   
       const deleteButton = screen.getByRole('button', {
           name: /delete/i
-        });
+        } 
+      );
   
-      act(() => {
-        fireEvent.click(deleteButton, { key: id });
-      });
+      fireEvent.click(deleteButton, { key: id });
     
       expect(await screen.findByText("refetched")).toBeInTheDocument();
     });
