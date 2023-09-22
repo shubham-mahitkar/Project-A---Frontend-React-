@@ -107,6 +107,13 @@ export default function Read() {
                         <StyledTableRow hover tabIndex={-1} key={index}>
                           {columns.map((column,index) => {
                             const value = row[column.id];
+                            if (index === 2 && value !== null){
+                              return (
+                                <StyledTableCell key={index} align={column.align}>
+                                  { JSON.stringify(value) }
+                                </StyledTableCell>
+                              );
+                            }
                             return (
                               <StyledTableCell key={index} align={column.align}>
                                 { value }

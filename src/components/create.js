@@ -10,6 +10,7 @@ export default function Create() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [application, setApplication] = useState([]);
     let history = useNavigate();
     const [postData, { loading, error, data }] = useMutation(CREATE_USER);
 
@@ -24,12 +25,26 @@ export default function Create() {
     if (error) return <ErrorBoundary />;
      
 
+    const applications = [
+        { value: 'Facebook', label: 'Facebook' },
+        { value: 'Instagram', label: 'Instagram' },
+        { value: 'Twitter', label: 'Twitter' },
+        { value: 'Pinterest', label: 'Pinterest' },
+        { value: 'Youtube', label: 'Youtube' },
+        { value: 'Tiktok', label: 'Tiktok' },
+      ];
+
+      const handleSelectChange = (e) => {
+        const selectedOptions = Array.from(e.target.selectedOptions).map((option) => option.value);
+        setApplication(selectedOptions);
+      };
+
     return (
         <div>
             <Form className="create-form" 
                 onSubmit={e => {
                     e.preventDefault();
-                    postData({ variables: { name: name, email: email, password: password } });
+                    postData({ variables: { name: name, email: email, password: password, application: application } });
                 }}>
                     <h1 style={{color: "white"}}> Create User </h1>
                 <Form.Field>
@@ -44,6 +59,14 @@ export default function Create() {
                     <label>Password</label>
                     <input  label="password" type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} required/>
                 </Form.Field>
+                <label>Application</label>
+                <select value={application} aria-label="Application" id="application" name="application" multiple onChange={handleSelectChange}>
+                        {applications.map((option) => (
+                                <option key={option.value} multiple>
+                                    {option.value}
+                                </option>
+                        ))}
+                </select>
                 <Button type='submit'>Submit</Button>
             </Form>
         </div>
