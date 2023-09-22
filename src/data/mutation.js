@@ -12,11 +12,12 @@ mutation createUser($name: String!, $email: String!, $password: String!) {
 `;
 
 export const UPDATE_USER = gql`
-mutation updateUser($id: ID!, $name: String!, $email: String!) {
-  updateUser(id: $id, name: $name, email: $email) {
+mutation updateUser($id: ID!, $name: String!, $email: String!, $application: [String]) {
+  updateUser(id: $id, name: $name, email: $email, application: $application) {
     id
     name
     email
+    application
   }
 }
 `;
