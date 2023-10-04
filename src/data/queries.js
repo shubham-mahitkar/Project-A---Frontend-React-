@@ -21,6 +21,13 @@ export const GET_USER_BY_ID = gql`
       email
       password
       application
+      followers
+      labels
+      awards {
+      album_song
+      award
+      year
+    }
     }
   }
 `;

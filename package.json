@@ -49,6 +49,7 @@
     "\\.css$": "some-css-transformer"
   },
   "devDependencies": {
+    "@mui/lab": "^5.0.0-alpha.146",
     "@testing-library/jest-dom": "^6.1.2",
     "@testing-library/react": "^14.0.0",
     "graphql-request": "^6.1.0",

@@ -38,6 +38,9 @@ export default function Read() {
     function Add() {
         history('/create');
     }
+    function showTimeline(id) {
+      history(`/timeline/${id}/award`);
+    }
 
     const onDelete = (id) => {
         deleteData({ variables: { id: id } }).then(()=>{
@@ -115,7 +118,7 @@ export default function Read() {
                               );
                             }
                             return (
-                              <StyledTableCell key={index} align={column.align}>
+                              <StyledTableCell key={index} align={column.align} onClick={() => {if (index === 0) {showTimeline(row.id)}}}>
                                 { value }
                               </StyledTableCell>
                             );

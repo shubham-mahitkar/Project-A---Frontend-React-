@@ -13,23 +13,24 @@ export default function Update() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [application, setApplication] = useState([]);
+    const [followers, setFollowers] = useState('');
+    const [labels, setLabels] = useState('');
     let history = useNavigate();
     const { id } = useParams();
-    console.log("applicationn: ", application);
     const { loading:loading1, error:error1, data:dataByID } = useQuery(GET_USER_BY_ID, {
         variables: { id: id },
-      });
+    });
 
     // const application = dataByID?.user.application || ["not registered"];
      
 
     useEffect(()=> {
         if(dataByID){
-            console.log("databyid: ", dataByID);
             setName(dataByID?.user.name);
             setEmail(dataByID?.user.email);
             setApplication(dataByID?.user.application || ["not registered"]);
-            console.log("check app: ", dataByID);
+            setFollowers(dataByID?.user.followers);
+            setLabels(dataByID?.user.labels);
         }
     }, [dataByID]);
 
@@ -81,6 +82,14 @@ export default function Update() {
                                 </option>
                         ))}
                 </select>
+                <Form.Field>
+                    <label>Followers</label>
+                    <input placeholder='Followers' value={followers}/>
+                </Form.Field>
+                <Form.Field>
+                    <label>Labels</label>
+                    <input placeholder='Labels' value={labels}/>
+                </Form.Field>
                 <Button type='submit'>UPDATE USER</Button>
             </Form>
         </div>
