@@ -4,12 +4,15 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { createUploadLink } from 'apollo-upload-client';
 import './App.css';
 import "./components/style/styles.scss";
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000',
   cache: new InMemoryCache(),
+  link: createUploadLink({ uri: 'http://localhost:4000/' }),
+  csrfPrevention: true
 });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

@@ -29,7 +29,6 @@ export default function Read() {
     let history = useNavigate();
 
     const [deleteData] = useMutation(DELETE_USER);
-
     const { loading, error, data, refetch } = useQuery(GET_USERS);
     if (loading) return 'Submitting...';
     // if (error) return `Submission error! ${error.message}`;
@@ -41,6 +40,9 @@ export default function Read() {
     function showTimeline(id) {
       history(`/timeline/${id}/award`);
     }
+    function bulkUpload() {
+      history('/bulkUpload');
+  }
 
     const onDelete = (id) => {
         deleteData({ variables: { id: id } }).then(()=>{
@@ -83,6 +85,9 @@ export default function Read() {
         <h1 title="user list">USER LIST</h1>
         <div>
           <Button type="button" role='button' onClick={() => Add()}>Create User</Button>
+        </div>
+        <div style={{padding: '15px'}}>
+          <Button type="button" role='button' onClick={() => bulkUpload()}>Import CSV</Button>
         </div>
           <Paper sx={{ width: '100%', overflow: 'hidden' }}>
             <TableContainer component={Paper} sx={{ maxHeight: 440 }}>

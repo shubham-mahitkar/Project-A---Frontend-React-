@@ -22,7 +22,7 @@ export default function Update() {
     });
 
     // const application = dataByID?.user.application || ["not registered"];
-     
+
 
     useEffect(()=> {
         if(dataByID){
@@ -52,6 +52,7 @@ export default function Update() {
         { value: 'Pinterest', label: 'Pinterest' },
         { value: 'Youtube', label: 'Youtube' },
         { value: 'Tiktok', label: 'Tiktok' },
+        { value: 'Spotify', label: 'Spotify' },
       ];
 
       const handleSelectChange = (e) => {
@@ -84,11 +85,11 @@ export default function Update() {
                 </select>
                 <Form.Field>
                     <label>Followers</label>
-                    <input placeholder='Followers' value={followers}/>
+                    <input placeholder='Followers' style={{color:'whitesmoke'}} value={followers} disabled/>
                 </Form.Field>
                 <Form.Field>
                     <label>Labels</label>
-                    <input placeholder='Labels' value={labels}/>
+                    <input placeholder='Labels' style={{color:'whitesmoke'}} value={labels} disabled/>
                 </Form.Field>
                 <Button type='submit'>UPDATE USER</Button>
             </Form>

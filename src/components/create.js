@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Form } from 'semantic-ui-react'
 import { useNavigate  } from 'react-router';
-import { useMutation, gql } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import Button from '@mui/material/Button';
 import ErrorBoundary from './errorboundary';
 import { CREATE_USER } from '../data/mutation';
+import { GET_USERS } from '../data/queries';
 
 export default function Create() {
     const [name, setName] = useState('');
@@ -13,6 +14,7 @@ export default function Create() {
     const [application, setApplication] = useState([]);
     let history = useNavigate();
     const [postData, { loading, error, data }] = useMutation(CREATE_USER);
+    const { loading:loading1, error:error1, error:data1, refetch } = useQuery(GET_USERS);
 
     useEffect(()=>{
         if (data) {
@@ -23,7 +25,7 @@ export default function Create() {
     if (loading) return 'Submitting...';
     // if (error) return `Submission error! ${error.message}`;
     if (error) return <ErrorBoundary />;
-     
+
 
     const applications = [
         { value: 'Facebook', label: 'Facebook' },
@@ -32,6 +34,7 @@ export default function Create() {
         { value: 'Pinterest', label: 'Pinterest' },
         { value: 'Youtube', label: 'Youtube' },
         { value: 'Tiktok', label: 'Tiktok' },
+        { value: 'Spotify', label: 'Spotify' },
       ];
 
       const handleSelectChange = (e) => {
@@ -44,7 +47,9 @@ export default function Create() {
             <Form className="create-form" 
                 onSubmit={e => {
                     e.preventDefault();
-                    postData({ variables: { name: name, email: email, password: password, application: application } });
+                    postData({ variables: { name: name, email: email, password: password, application: application } }).then(()=>{
+                        refetch();
+                    } );
                 }}>
                     <h1 style={{color: "white"}}> Create User </h1>
                 <Form.Field>

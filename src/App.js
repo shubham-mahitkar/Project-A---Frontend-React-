@@ -6,6 +6,7 @@ import PageNotFound from './components/pagenotfound';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ErrorBoundary from './components/errorboundary';
 import CustomizedTimeline from './components/timeline';
+import BulkUpload from './components/bulkUpload';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route exact path='/read' Component={Read} />
             <Route path='/update/:id' Component={Update} />
             <Route path='/timeline/:id/award' Component={CustomizedTimeline} />
+            <Route path='/bulkUpload' Component={BulkUpload} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
       </Router>
