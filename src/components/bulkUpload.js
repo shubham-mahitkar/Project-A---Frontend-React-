@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate  } from 'react-router';
+import { GET_USERS } from '../data/queries';
+import { useQuery } from '@apollo/client';
 
 const API_URL = 'http://localhost:5000/';
 
@@ -7,6 +9,7 @@ export default function BulkUpload() {
     const [file, setFile] = useState(null);
     let history = useNavigate();
 
+    const { loading, error, data, refetch } = useQuery(GET_USERS);
 
     const uploadBulkUsers = async (formData) => {
       try {
@@ -14,10 +17,11 @@ export default function BulkUpload() {
           method: 'POST',
           body: formData,
         });
-    
+
         const data = await response.json();
+        refetch();
         return data;
-    
+
       } catch (error) {
         throw new Error(error.message);
       }
