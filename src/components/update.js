@@ -1,98 +1,97 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form } from 'semantic-ui-react'
-import { useNavigate  } from 'react-router';
+import { Button, Form } from 'semantic-ui-react';
+import { useNavigate } from 'react-router';
 import { useQuery, useMutation } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 import ErrorBoundary from './errorboundary';
 import { UPDATE_USER } from '../data/mutation';
 import { GET_USER_BY_ID } from '../data/queries';
-// import { MultiSelect } from "react-multi-select-component";
 
+const applications = [
+    { value: 'Facebook', label: 'Facebook' },
+    { value: 'Instagram', label: 'Instagram' },
+    { value: 'Twitter', label: 'Twitter' },
+    { value: 'Pinterest', label: 'Pinterest' },
+    { value: 'Youtube', label: 'Youtube' },
+    { value: 'Tiktok', label: 'Tiktok' },
+    { value: 'Spotify', label: 'Spotify' },
+];
 
-export default function Update() {
+const Update = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [application, setApplication] = useState([]);
     const [followers, setFollowers] = useState('');
     const [labels, setLabels] = useState('');
-    let history = useNavigate();
+    const history = useNavigate();
     const { id } = useParams();
-    const { loading:loading1, error:error1, data:dataByID } = useQuery(GET_USER_BY_ID, {
+
+    const { loading: loading1, error: error1, data: dataByID } = useQuery(GET_USER_BY_ID, {
         variables: { id: id },
     });
 
-    // const application = dataByID?.user.application || ["not registered"];
-
-
-    useEffect(()=> {
-        if(dataByID){
-            setName(dataByID?.user.name);
-            setEmail(dataByID?.user.email);
-            setApplication(dataByID?.user.application || ["not registered"]);
-            setFollowers(dataByID?.user.followers);
-            setLabels(dataByID?.user.labels);
+    useEffect(() => {
+        if (dataByID) {
+            const { name, email, application, followers, labels } = dataByID.user;
+            setName(name);
+            setEmail(email);
+            setApplication(application || ["not registered"]);
+            setFollowers(followers);
+            setLabels(labels);
         }
     }, [dataByID]);
 
     const [updateRecord, { data, loading, error }] = useMutation(UPDATE_USER);
 
-    useEffect(()=>{
-      if (data) {
-          history('/read');
-      }
-      }, [data]);
+    useEffect(() => {
+        if (data) {
+            history('/read');
+        }
+    }, [data]);
+
     if (loading) return 'Submitting...';
-    // if (error) return `Submission error! ${error.message}`;
     if (error) return <ErrorBoundary />;
 
-    const applications = [
-        { value: 'Facebook', label: 'Facebook' },
-        { value: 'Instagram', label: 'Instagram' },
-        { value: 'Twitter', label: 'Twitter' },
-        { value: 'Pinterest', label: 'Pinterest' },
-        { value: 'Youtube', label: 'Youtube' },
-        { value: 'Tiktok', label: 'Tiktok' },
-        { value: 'Spotify', label: 'Spotify' },
-      ];
+    const handleInputChange = (setter) => (e) => setter(e.target.value);
 
-      const handleSelectChange = (e) => {
+    const renderInputField = (label, type, value, setter, required = true, disabled = false) => (
+        <Form.Field key={label}>
+            <label>{label}</label>
+            <input type={type} placeholder={label} style={{ color: disabled ? 'whitesmoke' : 'unset' }} value={value} onChange={handleInputChange(setter)} required={required} disabled={disabled} />
+        </Form.Field>
+    );
+
+    const handleSelectChange = (e) => {
         const selectedOptions = Array.from(e.target.selectedOptions).map((option) => option.value);
         setApplication(selectedOptions);
-      };
+    };
+
     return (
         <div>
-            <Form className="create-form" 
-                onSubmit={e => {
+            <Form
+                className="create-form"
+                onSubmit={(e) => {
                     e.preventDefault();
-                    updateRecord({ variables: {id: id, name: name, email: email, application: application } }); 
-                }}>
-                <h1 style={{color: "white"}}> Update User </h1>
-                <Form.Field>
-                    <label>Name</label>
-                    <input placeholder='Name' value={name} onChange={(e) => setName(e.target.value)} required/>
-                </Form.Field>
-                <Form.Field>
-                    <label>Email</label>
-                    <input placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} required/>
-                </Form.Field>
+                    updateRecord({ variables: { id, name, email, application } });
+                }}
+            >
+                <h1 style={{ color: 'white' }}> Update User </h1>
+                {renderInputField('Name', 'text', name, setName)}
+                {renderInputField('Email', 'email', email, setEmail)}
                 <label>Application</label>
                 <select value={application} aria-label="Application" id="application" name="application" multiple onChange={handleSelectChange}>
-                        {applications.map((option) => (
-                                <option key={option.value} selected={true?option.value===application:false} multiple>
-                                    {option.value}
-                                </option>
-                        ))}
+                    {applications.map((option) => (
+                        <option key={option.value} selected={application.includes(option.value)}>
+                            {option.value}
+                        </option>
+                    ))}
                 </select>
-                <Form.Field>
-                    <label>Followers</label>
-                    <input placeholder='Followers' style={{color:'whitesmoke'}} value={followers} disabled/>
-                </Form.Field>
-                <Form.Field>
-                    <label>Labels</label>
-                    <input placeholder='Labels' style={{color:'whitesmoke'}} value={labels} disabled/>
-                </Form.Field>
-                <Button type='submit'>UPDATE USER</Button>
+                {renderInputField('Followers', 'text', followers, setFollowers, false, true)}
+                {renderInputField('Labels', 'text', labels, setLabels, false, true)}
+                <Button type="submit">UPDATE USER</Button>
             </Form>
         </div>
-    )
-}
+    );
+};
+
+export default Update;
