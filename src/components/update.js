@@ -57,7 +57,7 @@ const Update = () => {
     const renderInputField = (label, type, value, setter, required = true, disabled = false) => (
         <Form.Field key={label}>
             <label>{label}</label>
-            <input type={type} placeholder={label} style={{ color: disabled ? 'whitesmoke' : 'unset' }} value={value} onChange={handleInputChange(setter)} required={required} disabled={disabled} />
+            <input type={type} placeholder={label} style={{ color: disabled ? 'whitesmoke' : '' }} value={value} onChange={handleInputChange(setter)} required={required} disabled={disabled} />
         </Form.Field>
     );
 

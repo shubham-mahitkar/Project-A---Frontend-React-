@@ -89,7 +89,7 @@ export default function Read() {
         <div style={{padding: '15px'}}>
           <Button type="button" role='button' onClick={() => bulkUpload()}>Import CSV</Button>
         </div>
-          <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+          <Paper sx={{ width: '100%'}}>
             <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
