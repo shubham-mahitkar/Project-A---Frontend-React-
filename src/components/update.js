@@ -49,7 +49,6 @@ const Update = () => {
         }
     }, [data]);
 
-    if (loading) return 'Submitting...';
     if (error) return <ErrorBoundary />;
 
     const handleInputChange = (setter) => (e) => setter(e.target.value);
