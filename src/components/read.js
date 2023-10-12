@@ -30,7 +30,7 @@ export default function Read() {
 
     const [deleteData] = useMutation(DELETE_USER);
     const { loading, error, data, refetch } = useQuery(GET_USERS);
-    if (loading) return 'Submitting...';
+    if (loading) return 'Loading...';
     // if (error) return `Submission error! ${error.message}`;
     if (error) return <ErrorBoundary />;
 
@@ -89,7 +89,7 @@ export default function Read() {
         <div style={{padding: '15px'}}>
           <Button type="button" role='button' onClick={() => bulkUpload()}>Import CSV</Button>
         </div>
-          <Paper sx={{ width: '100%'}}>
+          <Paper sx={{ width: '80vw'}}>
             <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
@@ -104,7 +104,7 @@ export default function Read() {
                       </StyledTableCell>
                     ))}
                     <StyledTableCell>Update</StyledTableCell>
-                    <StyledTableCell>DELETE_USER</StyledTableCell>
+                    <StyledTableCell>Delete</StyledTableCell>
                   </StyledTableRow>
                 </TableHead>
                 <TableBody>
