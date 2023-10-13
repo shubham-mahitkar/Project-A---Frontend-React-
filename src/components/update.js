@@ -35,7 +35,7 @@ const Update = () => {
             const { name, email, application, followers, labels } = dataByID.user;
             setName(name);
             setEmail(email);
-            setApplication(application || ["not registered"]);
+            setApplication(application);
             setFollowers(followers);
             setLabels(labels);
         }
@@ -78,7 +78,7 @@ const Update = () => {
                 {renderInputField('Name', 'text', name, setName)}
                 {renderInputField('Email', 'email', email, setEmail)}
                 <label>Application</label>
-                <select value={application} aria-label="Application" id="application" name="application" multiple onChange={handleSelectChange}>
+                <select value={application} required aria-label="Application" id="application" name="application" multiple onChange={handleSelectChange}>
                     {applications.map((option) => (
                         <option key={option.value} selected={application.includes(option.value)}>
                             {option.value}

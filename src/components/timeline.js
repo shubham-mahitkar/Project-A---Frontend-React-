@@ -40,7 +40,7 @@ export default function CustomizedTimeline() {
               </TimelineDot>
             <TimelineConnector />
           </TimelineSeparator>
-          <TimelineContent sx={{ py: '12px', px: 2, color: 'whitesmoke' }}>
+          <TimelineContent sx={{ px: 2, color: 'whitesmoke' }}>
             <Typography variant="h6" component="span">
               {row.album_song}
             </Typography>

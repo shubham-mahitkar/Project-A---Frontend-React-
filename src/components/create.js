@@ -21,6 +21,7 @@ const Create = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
   const [application, setApplication] = useState([]);
   const history = useNavigate();
 
@@ -55,9 +56,13 @@ const Create = () => {
         className="create-form"
         onSubmit={(e) => {
           e.preventDefault();
-          postData({ variables: { name, email, password, application } }).then(() => {
-            refetch();
-          });
+          if (application.length===0){
+            setMessage("please select application")
+          } else {
+            postData({ variables: { name, email, password, application } }).then(() => {
+              refetch();
+            });
+          }
         }}
       >
         <h1 style={{ color: 'white' }}> Create User </h1>
@@ -65,11 +70,11 @@ const Create = () => {
         {renderInputField('Email', 'email', email, setEmail)}
         {renderInputField('Password', 'password', password, setPassword)}
         <label>Application</label>
-        <select value={application} aria-label="Application" id="application" name="application" multiple onChange={handleSelectChange}>
+        <select value={application} required aria-label="Application" id="application" name="application" multiple onChange={handleSelectChange}>
           {applications.map((option) => (
             <option key={option.value}>{option.value}</option>
           ))}
-        </select>
+        </select><p>{message?message:null}</p>
         <Button type="submit">Submit</Button>
       </Form>
     </div>
